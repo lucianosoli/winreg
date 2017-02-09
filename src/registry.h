@@ -6,7 +6,6 @@
 #define REGISTRY_H
 
 #include <stdio.h>
-#include <stdint.h>
 
 #define REG_NONE 0x00000000
 #define REG_SZ 0x0000001
@@ -24,7 +23,23 @@
 // Windows 7
 
 typedef struct {
-	int test;
+	char signature[4];
+	int primary_seq_number;
+	int secondary_seq_number;
+	long last_written_timestamp;
+	int major_version;
+	int minor_version;
+	int file_type;
+	int file_format;
+	int root_cell_offset;
+	int hive_bin_data_size;
+	int clustering_factor;
+	char filename[64];
+	char reserved[396];
+	int checksum;
+	char reserved2[3576];
+	int boot_type;
+	int boot_recover;
 }File_base_bloc;
 
 typedef struct {
@@ -112,5 +127,7 @@ typedef struct {			// Requiered Minor version field > 3
 	short number_segments;
 	int offset_list_segments;
 }Big_data;
+
+int nb_to_read(char *buf);
 
 #endif

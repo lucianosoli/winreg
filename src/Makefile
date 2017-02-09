@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -g
 LDFLAGS =
 
-SOURCES = registry.h main.c
+SOURCES = registry.c main.c
 OBJECTS = $(SOURCES:.c=.o)
 
 EXE = main.exe
