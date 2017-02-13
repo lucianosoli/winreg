@@ -128,6 +128,9 @@ typedef struct {			// Requiered Minor version field > 3
 	int offset_list_segments;
 }Big_data;
 
+File_base_bloc *read_file_base_bloc(char *buf);
 int nb_to_read(char *buf);
+void fill_int(int *i, char *buf);
+void fill_long(long *l, char *buf);
 
 #endif

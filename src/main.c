@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 {
 	char buf[4096];
 	FILE *registre;
+	File_base_bloc *fbc;
 
 	registre = NULL;
 //	registre = fopen("../../../registre/system", "r");
@@ -19,8 +20,9 @@ int main(int argc, char *argv[])
 	}
 
 	read_file(registre, buf, 4);
-
 	read_file(registre, buf, nb_to_read(buf));
+
+	fbc = read_file_base_bloc(buf);
 
 	print_hex(buf, READ_SIZE);
 
