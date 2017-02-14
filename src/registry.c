@@ -25,7 +25,7 @@ File_base_bloc *read_file_base_bloc(char *buf)
 	strncpy(fbc->signature, buf, 4);
 	fill_int(&(fbc->primary_seq_number), &buf[4]);
 	fill_int(&(fbc->secondary_seq_number), &buf[8]);
-	fill_long(&(fbc->last_written_timestamp), &buf[16]);
+	fill_long(&(fbc->last_written_timestamp), &buf[12]);
 	fill_int(&(fbc->major_version), &buf[20]);
 	fill_int(&(fbc->minor_version), &buf[24]);
 	fill_int(&(fbc->file_type), &buf[28]);
