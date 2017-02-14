@@ -43,6 +43,38 @@ File_base_bloc *read_file_base_bloc(char *buf)
 	return fbc;
 }
 
+Hive_bin_header *read_hive_bin_header(char *buf)
+{
+	/*
+		Read the hive bin header, alloc
+		a new hive bin header srtucture
+		and fill it with the value in
+		buf string
+	*/
+
+	Hive_bin_header *hbh;
+
+	hbh = NULL;
+
+	hbh = (Hive_bin_header*) malloc(sizeof(Hive_bin_header));
+	if(hbh == NULL)
+	{
+		printf("Error d'allocation de hbh\n");
+		return NULL;
+	}
+
+	bzero(hbh, sizeof(Hive_bin_header));
+
+	strncpy(hbh->signature, buf, 4);
+	fill_int(&(hbh->offset), &buf[4]);
+	fill_int(&(hbh->size), &buf[8]);
+	strncpy(hbh->reserved, &buf[12], 8);
+	fill_long(&(hbh->timestamp), &buf[20]);
+	fill_int(&(hbh->spare), &buf[28]);
+
+	return hbh;
+}
+
 int nb_to_read(char *buf)
 {
 	/*
@@ -51,6 +83,8 @@ int nb_to_read(char *buf)
 	*/
 	if(strncmp(buf, "regf", 4) == 0)
 		return 4096;
+	else if(strncmp(buf, "hbin", 4) == 0)
+		return 32;
 
 	return 0;
 }

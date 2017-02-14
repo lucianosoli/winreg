@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 	char buf[4096];
 	FILE *registre;
 	File_base_bloc *fbc;
+	Hive_bin_header *hbh;
 
 	registre = NULL;
 //	registre = fopen("../../../registre/system", "r");
@@ -19,25 +20,31 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	read_file(registre, buf, 4);
-	read_file(registre, buf, nb_to_read(buf));
+	read_file(registre, buf, 4, 0);
+	read_file(registre, buf, nb_to_read(buf), 0);
 
 	fbc = read_file_base_bloc(buf);
+
+	read_file(registre, buf, 4, 4096);
+	read_file(registre, buf, nb_to_read(buf), 4096);
+
+	hbh = read_hive_bin_header(buf);
 
 	print_hex(buf, READ_SIZE);
 
 	return 0;
 }
 
-void read_file(FILE *stream, char *tmp, int n)
+void read_file(FILE *stream, char *tmp, int n, long offset)
 {
 	int size_read;
 
 	READ_SIZE = n;
 
+	fseek(stream, offset, SEEK_SET);
+
 	size_read = fread(tmp, 1, n, stream);
 	tmp[size_read] = 0;
-	rewind(stream);
 }
 
 void print_hex(char *s, int count)

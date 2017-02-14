@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 
+#define ROOT_CELL_OFFSET 4096
+
 #define REG_NONE 0x00000000
 #define REG_SZ 0x0000001
 #define REG_EXPAND_SZ 0x0000002
@@ -43,12 +45,12 @@ typedef struct {
 }File_base_bloc;
 
 typedef struct {
-	char signature[5];
+	char signature[4];
 	int offset;
 	int size;
-	long reserved;
-	long timestamp;
-	short sapre;
+	char reserved[8];
+	long timestamp;		// Win32 filetime
+	int spare;
 }Hive_bin_header;
 
 typedef struct {
@@ -129,6 +131,7 @@ typedef struct {			// Requiered Minor version field > 3
 }Big_data;
 
 File_base_bloc *read_file_base_bloc(char *buf);
+Hive_bin_header *read_hive_bin_header(char *buf);
 int nb_to_read(char *buf);
 void fill_int(int *i, char *buf);
 void fill_long(long *l, char *buf);
