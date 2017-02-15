@@ -89,6 +89,22 @@ int nb_to_read(char *buf)
 	return 0;
 }
 
+int read_cell(char *buf, long offset)
+{
+	/*
+		Return the size of a cell
+		Requiere stdlib
+
+		Warning possible buffer overflow here
+	*/
+
+	int tmp;
+
+	fill_int(&tmp, &buf[offset]);
+
+	return abs(tmp);
+}
+
 void fill_int(int *i, char *buf)
 {
 	/*

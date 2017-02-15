@@ -10,7 +10,7 @@
 
 #include "registry.h"
 
-void read_file(FILE *fd, char *tmp, int n, long offset);
+int read_file(FILE *fd, char *tmp, int n, long offset);
 void print_hex(char *s, int count);
 void print_display_strings(char *s, int count);
 void print_hex_car(char c);

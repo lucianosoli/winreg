@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 	File_base_bloc *fbc;
 	Hive_bin_header *hbh;
 
+	bzero(buf, 4096);
 	registre = NULL;
 //	registre = fopen("../../../registre/system", "r");
 	registre = fopen("../../registre/system", "r");
@@ -22,20 +23,20 @@ int main(int argc, char *argv[])
 
 	read_file(registre, buf, 4, 0);
 	read_file(registre, buf, nb_to_read(buf), 0);
-
 	fbc = read_file_base_bloc(buf);
 
-	read_file(registre, buf, 4, 4096);
 	read_file(registre, buf, nb_to_read(buf), 4096);
-
 	hbh = read_hive_bin_header(buf);
 
-	print_hex(buf, READ_SIZE);
+	printf("Size: %d\n", read_cell(buf, 32));
+
+//	print_hex(buf, READ_SIZE);
+	print_hex(buf, 4096);
 
 	return 0;
 }
 
-void read_file(FILE *stream, char *tmp, int n, long offset)
+int read_file(FILE *stream, char *tmp, int n, long offset)
 {
 	int size_read;
 
@@ -45,6 +46,10 @@ void read_file(FILE *stream, char *tmp, int n, long offset)
 
 	size_read = fread(tmp, 1, n, stream);
 	tmp[size_read] = 0;
+
+	fseek(stream, 0, SEEK_END);
+
+	return 0;
 }
 
 void print_hex(char *s, int count)

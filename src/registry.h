@@ -6,6 +6,7 @@
 #define REGISTRY_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define ROOT_CELL_OFFSET 4096
 
@@ -133,6 +134,7 @@ typedef struct {			// Requiered Minor version field > 3
 File_base_bloc *read_file_base_bloc(char *buf);
 Hive_bin_header *read_hive_bin_header(char *buf);
 int nb_to_read(char *buf);
+int read_cell(char *buf, long offset);
 void fill_int(int *i, char *buf);
 void fill_long(long *l, char *buf);
 
