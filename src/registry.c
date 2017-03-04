@@ -75,6 +75,76 @@ Hive_bin_header *read_hive_bin_header(char *buf)
 	return hbh;
 }
 
+Key_node *read_key_node(char *buf, long offset, int size)
+{
+	/*
+		Read key node, alloc a new
+		key node structure and fill it
+		with the value in buff string
+	*/
+
+	int i, f;
+	Key_node *nk;
+
+	nk = NULL;
+
+	nk = (Key_node*) malloc(sizeof(Key_node));
+	if(nk == NULL)
+	{
+		printf("Error d'allocation de nk\n");
+		return NULL;
+	}
+
+	bzero(nk, sizeof(Key_node));
+
+	nk->key_name = (char*) malloc(sizeof(char)*(size-76+1));
+
+	strncpy(nk->signature, &buf[offset+0], 2);
+	fill_short(&(nk->flags), &buf[offset+2]);
+	fill_long(&(nk->last_written_timestamp), &buf[offset+4]);
+	fill_int(&(nk->access_bits), &buf[offset+12]);
+	fill_int(&(nk->parent), &buf[offset+16]);
+	fill_int(&(nk->number_subkeys), &buf[offset+20]);
+	fill_int(&(nk->number_volatile_subkeys), &buf[offset+24]);
+	fill_int(&(nk->subkeys_list_offset), &buf[offset+28]);
+	fill_int(&(nk->volatile_subkeys_list_offset), &buf[offset+32]);
+	fill_int(&(nk->number_key_values), &buf[offset+36]);
+	fill_int(&(nk->key_values_list_offset), &buf[offset+40]);
+	fill_int(&(nk->key_security_offset), &buf[offset+44]);
+	fill_int(&(nk->class_name_offset), &buf[offset+48]);
+	fill_short(&(nk->largest_subkey_name_length), &buf[offset+52]);
+	fill_char(&(nk->flags_2), &buf[offset+54]);
+	fill_char(&(nk->debug), &buf[offset+55]);
+	fill_int(&(nk->largest_subkey_class_name_length), &buf[offset+56]);
+	fill_int(&(nk->largest_value_name_length), &buf[offset+60]);
+	fill_int(&(nk->largest_value_data_size), &buf[offset+64]);
+	fill_int(&(nk->workvar), &buf[offset+68]);
+	fill_short(&(nk->key_name_length), &buf[offset+72]);
+	fill_short(&(nk->class_name_length), &buf[offset+74]);
+	strncpy(nk->key_name, &buf[offset+76], size-76);
+
+/*
+	WARNING: need to review this function to take
+	care UTF-16-LE strings and not sure the stop
+	byte is 03 for ascii strings
+*/
+
+	for(i=0, f=0; i<(size-76); i++)
+	{
+		if((nk->key_name)[i] == 0x03)
+		{
+			(nk->key_name)[i] = '\0';
+			f = 1;
+			break;
+		}
+	}
+
+	if(f != 1)
+		printf("Error: no end of string found (nk function)\n");
+
+	return nk;
+}
+
 int nb_to_read(char *buf)
 {
 	/*
@@ -103,6 +173,25 @@ int read_cell(char *buf, long offset)
 	fill_int(&tmp, &buf[offset]);
 
 	return abs(tmp);
+}
+
+void fill_char(char *c, char *buf)
+{
+	/*
+		Fill char from buf
+	*/
+
+	*c = buf[0] & 0xFF;
+}
+
+void fill_short(short *s, char *buf)
+{
+	/*
+		Fill short from buf
+	*/
+
+	*s = buf[1] & 0xFF;
+	*s = ((*s) << 8) + (buf[0] & 0xFF);
 }
 
 void fill_int(int *i, char *buf)

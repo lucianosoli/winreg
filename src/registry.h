@@ -93,15 +93,18 @@ typedef struct {
 	int volatile_subkeys_list_offset;
 	int number_key_values;
 	int key_values_list_offset;
+	int key_security_offset;
+	int class_name_offset;
 	short largest_subkey_name_length;
 	char flags_2;				// Virtualization control flags + User flags
 	char debug;				// for debuggin
 	int largest_subkey_class_name_length;
+	int largest_value_name_length;
 	int largest_value_data_size;
 	int workvar;				// cached index
 	short key_name_length;
 	short class_name_length;
-						// key name strings
+	char *key_name;					// key name strings
 }Key_node;
 
 typedef struct {
@@ -112,7 +115,7 @@ typedef struct {
 	long data_type;
 	short flags;
 	short spare;
-				// Value name string
+					// Value name string
 }Key_value;
 
 typedef struct {
@@ -133,8 +136,11 @@ typedef struct {			// Requiered Minor version field > 3
 
 File_base_bloc *read_file_base_bloc(char *buf);
 Hive_bin_header *read_hive_bin_header(char *buf);
+Key_node *read_key_node(char *buf, long offset, int size);
 int nb_to_read(char *buf);
 int read_cell(char *buf, long offset);
+void fill_char(char *c, char *buf);
+void fill_short(short *s, char *buf);
 void fill_int(int *i, char *buf);
 void fill_long(long *l, char *buf);
 

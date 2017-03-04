@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 	FILE *registre;
 	File_base_bloc *fbc;
 	Hive_bin_header *hbh;
+	Key_node *nk;
 
 	bzero(buf, 4096);
 	registre = NULL;
@@ -29,6 +30,11 @@ int main(int argc, char *argv[])
 	hbh = read_hive_bin_header(buf);
 
 	printf("Size: %d\n", read_cell(buf, 32));
+
+	nk = read_key_node(buf, 32+4, read_cell(buf, 32));
+//	print_hex(buf, 50);
+	printf("%s\n", nk->key_name);
+	
 
 //	print_hex(buf, READ_SIZE);
 	print_hex(buf, 4096);
